@@ -1,413 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FAM-TREE | Document Your Heritage</title>
-    <link rel="stylesheet" href="css/index.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap"
-        rel="stylesheet">
+    
+    <!-- External Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #2d5a27;
+            --primary-dark: #1e3d1a;
+            --secondary: #f4f1ea;
+            --text: #333;
+            --accent: #8b5a2b;
+            --white: #ffffff;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- Global Resets --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        h1, h2, .logo { font-family: 'Playfair Display', serif; }
+
+        /* --- 1. SPLASH SCREEN (Optimized) --- */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.6s ease, visibility 0.6s;
+        }
+
+        .logo-container { text-align: center; color: white; padding: 20px; }
+        .splash-logo { font-size: 4rem; animation: logoGrow 1.2s ease-out forwards; }
+        
+        .loading-bar-container {
+            width: 150px; height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 30px auto 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .loading-bar-progress {
+            width: 0%; height: 100%;
+            background: white;
+            animation: fillBar 2s ease-in-out forwards;
+        }
+
+        @keyframes logoGrow {
+            0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes fillBar { to { width: 100%; } }
+
+        /* --- 2. NAVIGATION (Mobile Responsive) --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+        .logo span { color: var(--accent); }
+
+        .nav-links { display: flex; align-items: center; gap: 15px; }
+        .nav-links a { text-decoration: none; color: var(--text); font-weight: 600; font-size: 0.9rem; }
+        
+        .btn-sm { padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; }
+        .btn-primary { background: var(--primary); color: white !important; transition: var(--transition); }
+        .btn-primary:hover { background: var(--primary-dark); }
+
+        /* --- 3. HERO SECTION (Mobile First) --- */
+        .hero {
+            padding: 4rem 5% 2rem;
+            display: flex;
+            flex-direction: column; /* Stacked on mobile */
+            align-items: center;
+            text-align: center;
+            gap: 40px;
+            background: linear-gradient(rgba(244, 241, 234, 0.8), rgba(244, 241, 234, 0.8)),
+                        url('https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1350&q=80') center/cover;
+        }
+
+        .hero-content h1 {
+            font-size: 2.2rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+        }
+        .hero-content p {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            color: #555;
+        }
+
+        .hero-btns {
+            display: flex;
+            flex-direction: column; /* Easy tapping for thumbs */
+            gap: 15px;
+        }
+
+        /* --- 4. TREE PREVIEW (Hidden on small mobile, visible on tablet+) --- */
+        .hero-visual { width: 100%; max-width: 400px; }
+        .tree-preview {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .node {
+            border: 2px solid var(--primary);
+            padding: 8px 15px;
+            border-radius: 12px;
+            background: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            z-index: 2;
+        }
+        .branch-v { width: 2px; height: 30px; background: var(--primary); margin: -2px 0; }
+        .row-nodes { display: flex; gap: 20px; }
+
+        /* --- 5. FEATURES --- */
+        .features {
+            padding: 4rem 5%;
+            display: grid;
+            grid-template-columns: 1fr; /* Single column mobile */
+            gap: 30px;
+            background: var(--white);
+        }
+        .feature-card {
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            background: var(--secondary);
+            transition: var(--transition);
+        }
+        .feature-card:hover { transform: translateY(-5px); }
+        .feature-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
+
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 3rem 5%;
+            text-align: center;
+        }
+
+        /* --- 6. MEDIA QUERIES (The Magic) --- */
+        @media (min-width: 768px) {
+            .navbar { padding: 1.5rem 10%; }
+            .logo { font-size: 1.8rem; }
+            
+            .hero {
+                flex-direction: row;
+                text-align: left;
+                padding: 6rem 10%;
+                min-height: 80vh;
+            }
+            .hero-content { flex: 1; }
+            .hero-content h1 { font-size: 3.5rem; }
+            .hero-btns { flex-direction: row; }
+            .hero-visual { flex: 1; display: flex; justify-content: flex-end; }
+
+            .features {
+                grid-template-columns: repeat(3, 1fr);
+                padding: 5rem 10%;
+            }
+        }
+    </style>
 </head>
-
-<style>
-    :root {
-        --primary: #2d5a27;
-        /* Forest Green */
-        --secondary: #f4f1ea;
-        /* Cream/Parchment */
-        --text: #333;
-        --accent: #8b5a2b;
-        /* Wood Brown */
-    }
-
-    #splash-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #1e3d1a 0%, #2d5a27 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-        transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.5s;
-    }
-
-    .logo-container {
-        text-align: center;
-        color: white;
-    }
-
-    /* --- The Growing Logo Animation --- */
-    .tree-icon-wrapper {
-        position: relative;
-        display: inline-block;
-        margin-bottom: 20px;
-    }
-
-    .splash-logo {
-        font-size: 4rem;
-        position: relative;
-        z-index: 2;
-        animation: logoGrow 1.2s ease-out forwards;
-    }
-
-    .pulse-ring {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 60px;
-        height: 60px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        animation: pulse 2s infinite;
-    }
-
-    /* --- Text & Loading Bar --- */
-    .logo-container h1 {
-        font-size: 2rem;
-        letter-spacing: 4px;
-        font-weight: 800;
-        margin-bottom: 5px;
-        animation: fadeInUp 1s ease-out 0.5s forwards;
-        opacity: 0;
-    }
-
-    .logo-container p {
-        font-size: 0.8rem;
-        opacity: 0;
-        letter-spacing: 1px;
-        animation: fadeInUp 1s ease-out 0.8s forwards;
-    }
-
-    .loading-bar-container {
-        width: 150px;
-        height: 3px;
-        background: rgba(255, 255, 255, 0.1);
-        margin: 30px auto 0;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .loading-bar-progress {
-        width: 0%;
-        height: 100%;
-        background: white;
-        animation: fillBar 1.5s ease-in-out forwards;
-    }
-
-    /* --- Keyframe Definitions --- */
-    @keyframes logoGrow {
-        0% {
-            transform: scale(0) rotate(-15deg);
-            opacity: 0;
-        }
-
-        70% {
-            transform: scale(1.1) rotate(0deg);
-        }
-
-        100% {
-            transform: scale(1);
-            opacity: 1;
-        }
-    }
-
-    @keyframes pulse {
-        0% {
-            width: 60px;
-            height: 60px;
-            opacity: 0.5;
-        }
-
-        100% {
-            width: 120px;
-            height: 120px;
-            opacity: 0;
-        }
-    }
-
-    @keyframes fadeInUp {
-        from {
-            transform: translateY(20px);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    @keyframes fillBar {
-        0% {
-            width: 0%;
-        }
-
-        100% {
-            width: 100%;
-        }
-    }
-
-    /* Class to hide the splash screen */
-    .splash-hidden {
-        transform: translateY(-100%) !important;
-        /* App slides in from bottom */
-        opacity: 0;
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: var(--secondary);
-        color: var(--text);
-        line-height: 1.6;
-    }
-
-    h1,
-    h2,
-    .logo {
-        font-family: 'Playfair Display', serif;
-    }
-
-    .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.5rem 10%;
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .logo {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--primary);
-    }
-
-    .logo span {
-        color: var(--accent);
-        color: green;
-    }
-
-    nav a {
-        margin-left: 20px;
-        text-decoration: none;
-        color: var(--text);
-        font-weight: 600;
-    }
-
-    .btn-primary {
-        background: var(--primary);
-        color: white !important;
-        padding: 0.8rem 1.5rem;
-        border-radius: 5px;
-        transition: 0.3s;
-        text-decoration: none;
-    }
-
-    .btn-text {
-        background: white;
-        color: green !important;
-        padding: 0.8rem 1.5rem;
-        border-radius: 5px;
-        transition: 0.3s;
-        text-decoration: none;
-
-    }
-
-    .btn-primary:hover {
-        opacity: 0.9;
-    }
-
-
-    .hero {
-        background: linear-gradient(rgba(32, 32, 32, 0.2), rgba(32, 32, 32, 0.6)),
-            url(..//img/fam\ tree\ index.jpg) no-repeat center/cover;
-        display: flex;
-        align-items: center;
-        padding: 5rem 10%;
-        gap: 50px;
-    }
-
-    .hero-content {
-        flex: 1;
-    }
-
-    .hero-content h1 {
-        font-size: 3.5rem;
-        margin-bottom: 1.5rem;
-        color: rgb(222, 224, 221);
-    }
-
-    .hero-content p {
-        font-size: 1.2rem;
-        margin-bottom: 2rem;
-        max-width: 500px;
-        color: rgb(212, 210, 210);
-    }
-
-    .hero-visual {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-    }
-
-    /* Simple CSS Tree Visual */
-    .tree-preview {
-        text-align: center;
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .node {
-        border: 2px solid var(--accent);
-        padding: 10px 20px;
-        border-radius: 20px;
-        display: inline-block;
-        background: white;
-        font-weight: bold;
-    }
-
-    .row {
-        margin-top: 40px;
-        display: flex;
-        gap: 20px;
-    }
-
-    .features {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 30px;
-        padding: 5rem 10%;
-        background: #fff;
-    }
-
-    .feature-card {
-        text-align: center;
-        padding: 20px;
-    }
-
-    .feature-card h3 {
-        color: var(--accent);
-        margin-bottom: 10px;
-    }
-
-    footer {
-        text-align: center;
-        padding: 2rem;
-        font-size: 0.9rem;
-        background: var(--primary);
-        color: white;
-    }
-</style>
-
 <body>
 
+    <!-- Splash Screen -->
     <div id="splash-screen">
         <div class="logo-container">
-            <!-- The Animated Logo -->
             <div class="tree-icon-wrapper">
                 <i class="fa-solid fa-sitemap splash-logo"></i>
-                <div class="pulse-ring"></div>
             </div>
-            <h1>FAM-TREE</h1>
-            <p>Connecting Generations</p>
-
-            <!-- Modern Loading Bar -->
+            <h1 style="letter-spacing: 5px; color: white;">FAM-TREE</h1>
             <div class="loading-bar-container">
                 <div class="loading-bar-progress"></div>
             </div>
         </div>
     </div>
 
+    <!-- Navigation -->
     <header class="navbar">
-        <div class="logo">FAM-<span>TREE</span></div>
-        <nav>
-            <a href="#about">How it Works</a>
-            <a href="login.html" class="btn-secondary">Login</a>
-            <a href="signup.html" class="btn-primary">Start a Tree</a>
+        <a href="#" class="logo">FAM-<span>TREE</span></a>
+        <nav class="nav-links">
+            <a href="login.html">Login</a>
+            <a href="signup.html" class="btn-sm btn-primary">Start a Tree</a>
         </nav>
     </header>
 
     <main>
+        <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
-                <h1>Every family has a story. <br>Start writing yours today.</h1>
-                <p>A collaborative way to map your lineage. Create an account, invite your relatives, and watch your
-                    family tree grow automatically as everyone adds their piece of history.</p>
+                <h1>Every family has a story. Start yours.</h1>
+                <p>A collaborative way to map your lineage. Create an account, invite relatives, and watch your history grow.</p>
                 <div class="hero-btns">
-                    <a href="signup.html" class="btn-primary">Create Your Family Account</a>
-                    <a href="#how" class="btn-text">Watch how it works →</a>
+                    <a href="signup.html" class="btn-sm btn-primary" style="padding: 1.2rem 2rem; font-size: 1rem;">Get Started Free</a>
+                    <a href="#how" style="color: var(--primary); font-weight: 700; text-decoration: none; padding: 1rem;">See how it works →</a>
                 </div>
             </div>
+            
             <div class="hero-visual">
                 <div class="tree-preview">
-                    <div class="node root">Grandpa John</div>
-                    <div class="branch"></div>
-                    <div class="row">
-                        <div class="node">Dad</div>
-                        <div class="node">Aunt Mary</div>
+                    <div class="node">Ancestor John</div>
+                    <div class="branch-v"></div>
+                    <div class="row-nodes">
+                        <div class="node">Father</div>
+                        <div class="node">Aunt</div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Features -->
         <section id="how" class="features">
             <div class="feature-card">
+                <i class="fa-solid fa-seedling"></i>
                 <h3>1. Create</h3>
                 <p>One person starts the tree and sets the family foundation.</p>
             </div>
             <div class="feature-card">
+                <i class="fa-solid fa-paper-plane"></i>
                 <h3>2. Invite</h3>
                 <p>Send secure links to siblings, cousins, and elders.</p>
             </div>
             <div class="feature-card">
+                <i class="fa-solid fa-tree"></i>
                 <h3>3. Grow</h3>
-                <p>Members join and describe their position to fit perfectly into the hierarchy.</p>
+                <p>Watch your tree expand as family members add their branches.</p>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 FAM-TREE. Preserving history, one generation at a time.</p><br>
-        <p>Created by Dy'King</p>
+        <p>&copy; 2026 FAM-TREE. Preserving history, one generation at a time.</p>
+        <p style="opacity: 0.6; font-size: 0.8rem; margin-top: 10px;">Designed by Dy'King</p>
     </footer>
 
-</body>
-
-<script>
-    // Hide splash screen after 1.5 seconds
-    setTimeout(() => {
-        document.getElementById('splash-screen').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('splash-screen').style.display = 'none';
-        }, 500);
-    }, 1500);
-
-    window.addEventListener('load', function () {
-        // Wait 2 seconds so the animation completes
-        setTimeout(() => {
+    <script>
+        // Efficient Splash Transition
+        window.addEventListener('load', function () {
             const splash = document.getElementById('splash-screen');
-            splash.classList.add('splash-hidden');
-
-            // Remove from DOM after transition finishes
+            
+            // Give the user 2.5 seconds to see the animation
             setTimeout(() => {
-                splash.style.display = 'none';
-            }, 800);
-        }, 2500);
-    });
-</script>
-
+                splash.style.opacity = '0';
+                setTimeout(() => {
+                    splash.style.visibility = 'hidden';
+                }, 600);
+            }, 2500);
+        });
+    </script>
+</body>
 </html>
