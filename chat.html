@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Family Chat | FAM-TREE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Light Mode (Default) */
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #050505;
+            --text-sub: #65676b;
+            --border: #eeeeee;
+            --primary: #2d5a27;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e4e6eb;
+            --text-sub: #b0b3b8;
+            --border: #333333;
+        }
+
+        /* Apply variables to the body */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Update your card classes to use these variables */
+        .feed-post,
+        .info-card,
+        .login-card,
+        .mobile-nav,
+        .search-container {
+            background-color: var(--card-bg) !important;
+            border-color: var(--border) !important;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--chat-bg);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Header & Tabs --- */
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 15px 5px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .chat-header h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .chat-tabs {
+            display: flex;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            transition: 0.3s;
+        }
+
+        .tab.active {
+            color: white;
+            border-bottom: 3px solid white;
+        }
+
+        /* --- Main Chat Area --- */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: none;
+            padding-bottom: 140px;
+        }
+
+        .chat-container.active {
+            display: block;
+        }
+
+        /* Public Chat Bubbles */
+        .msg {
+            max-width: 80%;
+            margin-bottom: 12px;
+            padding: 10px 15px;
+            border-radius: 12px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .msg.received {
+            background: var(--msg-received);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .msg.sent {
+            background: var(--msg-sent);
+            margin-left: auto;
+            border-bottom-right-radius: 2px;
+        }
+
+        .sender-name {
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 3px;
+            color: var(--primary);
+        }
+
+        .msg-time {
+            font-size: 0.65rem;
+            color: #999;
+            display: block;
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        /* Direct Chat List */
+        .dm-item {
+            background: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #eee;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .dm-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dm-info {
+            flex: 1;
+        }
+
+        .dm-info strong {
+            display: block;
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+        }
+
+        .dm-info p {
+            font-size: 0.8rem;
+            color: #777;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .dm-meta {
+            text-align: right;
+        }
+
+        .dm-meta span {
+            font-size: 0.7rem;
+            color: #999;
+        }
+
+        .unread-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        /* Input Area (Only for Public Chat) */
+        .input-area {
+            position: fixed;
+            bottom: 70px;
+            left: 0;
+            width: 100%;
+            background: white;
+            padding: 10px 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border-top: 1px solid #ddd;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- MOBILE NAV (Reuse) --- */
+        .mobile-nav {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #eee;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #888;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 3px;
+        }
+
+        .nav-item span {
+            font-size: 0.6rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="chat-header">
+        <h2>Family Messages</h2>
+        <div class="chat-tabs">
+            <div class="tab active" onclick="switchTab('public')">Family Group</div>
+            <div class="tab" onclick="switchTab('private')">Direct Messages</div>
+        </div>
+    </header>
+
+    <!-- 1. PUBLIC FAMILY CHAT SECTION -->
+    <main id="publicChat" class="chat-container active">
+        <div class="msg received">
+            <span class="sender-name">Dad Michael</span>
+            Good morning family! Hope everyone is doing great today.
+            <span class="msg-time">08:30 AM</span>
+        </div>
+        <div class="msg sent">
+            <span class="sender-name">You (Wisdom)</span>
+            Morning Dad! I'm just working on the new family app.
+            <span class="msg-time">08:32 AM</span>
+        </div>
+        <div class="msg received">
+            <span class="sender-name">Sister Grace</span>
+            Wait, I just saw Aunt Martha joined the tree! Welcome Auntie! 🎉
+            <span class="msg-time">09:15 AM</span>
+        </div>
+        <div class="msg received">
+            <span class="sender-name">Aunt Martha</span>
+            Thank you Grace! Happy to be here. The tree looks wonderful.
+            <span class="msg-time">09:20 AM</span>
+        </div>
+        <div class="msg received">
+            <span class="sender-name">Mom Sarah</span>
+            Does anyone know the recipe for the Sunday Jollof? Michael is asking.
+            <span class="msg-time">10:05 AM</span>
+        </div>
+    </main>
+
+    <!-- 2. PRIVATE DIRECT CHAT LIST SECTION -->
+    <main id="privateChat" class="chat-container">
+        <a href="direct-message-window.html" class="dm-item">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Michael" class="dm-avatar">
+            <div class="dm-info">
+                <strong>Dad Michael</strong>
+                <p>Are you coming home for Easter?</p>
+            </div>
+            <div class="dm-meta">
+                <span>10:45 AM</span>
+                <div class="unread-dot"></div>
+            </div>
+        </a>
+        <a href="#" class="dm-item">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Grace" class="dm-avatar">
+            <div class="dm-info">
+                <strong>Sister Grace</strong>
+                <p>Did you see the photo I posted of the cake?</p>
+            </div>
+            <div class="dm-meta">
+                <span>Yesterday</span>
+            </div>
+        </a>
+        <a href="#" class="dm-item">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" class="dm-avatar">
+            <div class="dm-info">
+                <strong>Mom Sarah</strong>
+                <p>I sent you some money for the books.</p>
+            </div>
+            <div class="dm-meta">
+                <span>Tuesday</span>
+            </div>
+        </a>
+    </main>
+
+    <!-- Input Bar -->
+    <div class="input-area" id="inputArea">
+        <input type="text" placeholder="Type a message...">
+        <button class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="mobile-nav">
+        <a href="feed.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Feed</span></a>
+        <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-sitemap"></i><span>Tree</span></a>
+        <a href="chat.html" class="nav-item active"><i class="fa-solid fa-comment-dots"></i><span>Chat</span></a>
+        <a href="notifications.html" class="nav-item"><i class="fa-solid fa-bell"></i><span>Alerts</span></a>
+        <a href="menu.html" class="nav-item"><i class="fa-solid fa-bars"></i><span>Menu</span></a>
+    </nav>
+
+    <script>
+        function switchTab(type) {
+            const tabs = document.querySelectorAll('.tab');
+            const containers = document.querySelectorAll('.chat-container');
+            const inputArea = document.getElementById('inputArea');
+
+            // Toggle Tabs
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Toggle Visibility
+            containers.forEach(c => c.classList.remove('active'));
+            if (type === 'public') {
+                document.getElementById('publicChat').classList.add('active');
+                inputArea.style.display = 'flex'; // Show keyboard for group chat
+            } else {
+                document.getElementById('privateChat').classList.add('active');
+                inputArea.style.display = 'none'; // Hide keyboard for the list view
+            }
+        }
+    </script>
+</body>
+
+</html>

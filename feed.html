@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Family Feed | FAM-TREE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Light Mode (Default) */
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #050505;
+            --text-sub: #65676b;
+            --border: #eeeeee;
+            --primary: #2d5a27;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e4e6eb;
+            --text-sub: #b0b3b8;
+            --border: #333333;
+        }
+
+        /* Apply variables to the body */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Update your card classes to use these variables */
+        .feed-post,
+        .info-card,
+        .login-card,
+        .mobile-nav,
+        .search-container {
+            background-color: var(--card-bg) !important;
+            border-color: var(--border) !important;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            padding-bottom: 80px;
+        }
+
+        /* --- Top Navigation --- */
+        .feed-header {
+            background: var(--white);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .feed-header h1 {
+            font-size: 1.4rem;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .header-icons i {
+            font-size: 1.2rem;
+            margin-left: 15px;
+            color: var(--text-sub);
+        }
+
+        /* --- Create Post Section --- */
+        .create-post-card {
+            background: var(--white);
+            margin: 10px 0;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .post-trigger {
+            flex: 1;
+            background: #f0f2f5;
+            padding: 10px 15px;
+            border-radius: 20px;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* --- Events Horizontal Scroll --- */
+        .events-section {
+            background: var(--white);
+            padding: 15px 0;
+            margin-bottom: 10px;
+        }
+
+        .section-label {
+            padding: 0 15px 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .event-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 5px 15px;
+            scrollbar-width: none;
+        }
+
+        .event-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .event-card {
+            min-width: 110px;
+            background: #f9fbf9;
+            border: 1px solid #e0e6e0;
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            position: relative;
+        }
+
+        .event-badge {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .event-card img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-bottom: 8px;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-card strong {
+            display: block;
+            font-size: 0.75rem;
+        }
+
+        .event-card p {
+            font-size: 0.65rem;
+            color: var(--text-sub);
+        }
+
+        /* --- Feed Post Styling --- */
+        .feed-post {
+            background: var(--white);
+            margin-bottom: 10px;
+        }
+
+        .post-user {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            gap: 10px;
+        }
+
+        .post-user img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .post-user-info strong {
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .post-user-info span {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+        }
+
+        .post-text {
+            padding: 0 15px 10px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .post-media img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .post-actions {
+            display: flex;
+            padding: 5px 0;
+        }
+
+        .action-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn.active {
+            color: #e63946;
+        }
+
+        /* --- MOBILE NAV --- */
+        .mobile-nav {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #eee;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 2000;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #888;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 3px;
+        }
+
+        .nav-item span {
+            font-size: 0.6rem;
+            font-weight: 700;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            /* Hidden by default */
+            z-index: 3000;
+            align-items: flex-end;
+            /* Slides up from bottom on mobile */
+        }
+
+        /* Modal Box */
+        .modal-content {
+            background: white;
+            width: 100%;
+            border-radius: 15px 15px 0 0;
+            padding: 20px;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #65676b;
+        }
+
+        .post-submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .modal-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .privacy-pill {
+            background: #e4e6eb;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            border: none;
+            outline: none;
+            font-size: 1.1rem;
+            resize: none;
+            font-family: inherit;
+        }
+
+        .modal-attachments {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .attachment-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .stories-container {
+            background: var(--white);
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            /* Hide scrollbar for Firefox */
+            border-bottom: 1px solid #eee;
+        }
+
+        .stories-container::-webkit-scrollbar {
+            display: none;
+            /* Hide scrollbar for Chrome/Safari */
+        }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-width: 70px;
+        }
+
+        .story-circle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            padding: 3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* The colorful ring for unread stories */
+        .story-item.unread .story-circle {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+
+        .story-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid white;
+            object-fit: cover;
+        }
+
+        .story-item span {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-main);
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Style for the "Add Story" button */
+        .add-story .plus-icon {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: #1877f2;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="feed-header">
+        <h1>Family Feed</h1>
+        <div class="header-icons">
+            <i class="fa-solid fa-camera" onclick="document.getElementById('cameraInput').click()"></i>
+            <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
+        </div>
+
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;"
+            onchange="previewImage(this)">
+    </header>
+
+    <div class="stories-container">
+        <div class="story-item add-story">
+            <div class="story-circle">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Wisdom" class="story-avatar">
+                <div class="plus-icon"><i class="fa-solid fa-plus"></i></div>
+            </div>
+            <span>Your Story</span>
+        </div>
+
+        <div class="story-item unread">
+            <div class="story-circle">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Grace" class="story-avatar">
+            </div>
+            <span>Sister Grace</span>
+        </div>
+
+        <div class="story-item unread">
+            <div class="story-circle">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Michael" class="story-avatar">
+            </div>
+            <span>Dad Michael</span>
+        </div>
+
+        <div class="story-item">
+            <div class="story-circle">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" class="story-avatar">
+            </div>
+            <span>Mom Sarah</span>
+        </div>
+
+        <div class="story-item">
+            <div class="story-circle">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Martha" class="story-avatar">
+            </div>
+            <span>Aunt Martha</span>
+        </div>
+    </div>
+
+    <div class="create-post-card">
+        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Wisdom" class="user-avatar-small">
+        <div class="post-trigger" onclick="openModal()">What's on your mind, Wisdom?</div>
+    </div>
+
+    <div class="events-section">
+        <div class="section-label"><span>Upcoming Events</span> <a href="#"
+                style="text-decoration:none; color:var(--text-sub);">See all</a></div>
+        <div class="event-scroll">
+            <div class="event-card">
+                <span class="event-badge">TODAY</span>
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Grace">
+                <strong>Sister Grace</strong>
+                <p>24th Birthday</p>
+            </div>
+            <div class="event-card">
+                <span class="event-badge">APR 05</span>
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Anniversary">
+                <strong>Mom & Dad</strong>
+                <p>Wedding Anniv.</p>
+            </div>
+            <div class="event-card">
+                <span class="event-badge">APR 12</span>
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Peter">
+                <strong>Uncle Peter</strong>
+                <p>House Warming</p>
+            </div>
+            <div class="event-card">
+                <span class="event-badge">APR 20</span>
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Baby">
+                <strong>Cousin Joy</strong>
+                <p>Baby Dedication</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="feed-list">
+
+        <div class="feed-post">
+            <div class="post-user">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Michael">
+                <div class="post-user-info"><strong>Dad Michael</strong><span>2 hours ago</span></div>
+            </div>
+            <div class="post-text">Happy Birthday to our princess Grace! May God continue to bless your path. 🙏🎂</div>
+            <div class="post-media"><img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=500"></div>
+            <div class="post-stats"><span>❤️ 24 Likes</span><span>8 Comments</span></div>
+            <div class="post-actions"><button class="action-btn active"><i class="fa-solid fa-heart"></i>
+                    Love</button><button class="action-btn"><i class="fa-regular fa-comment"></i> Comment</button></div>
+        </div>
+
+        <div class="feed-post">
+            <div class="post-user">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah">
+                <div class="post-user-info"><strong>Mom Sarah</strong><span>5 hours ago</span></div>
+            </div>
+            <div class="post-text">Found this old photo of Wisdom and Grace. They have grown so much! #FamilyMemories
+            </div>
+            <div class="post-media"><img src="https://images.unsplash.com/photo-1471286174890-9c112ffca5b4?w=500"></div>
+            <div class="post-stats"><span>❤️ 18 Likes</span><span>3 Comments</span></div>
+            <div class="post-actions"><button class="action-btn"><i class="fa-regular fa-heart"></i>
+                    Love</button><button class="action-btn"><i class="fa-regular fa-comment"></i> Comment</button></div>
+        </div>
+
+        <div class="feed-post">
+            <div class="post-user">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Martha">
+                <div class="post-user-info"><strong>Aunt Martha</strong><span>Yesterday</span></div>
+            </div>
+            <div class="post-text">Congratulations to my nephew Peter for graduating today! Sky is the limit. 🎓🌟</div>
+            <div class="post-media"><img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=500"></div>
+            <div class="post-stats"><span>❤️ 45 Likes</span><span>12 Comments</span></div>
+            <div class="post-actions"><button class="action-btn"><i class="fa-regular fa-heart"></i>
+                    Love</button><button class="action-btn"><i class="fa-regular fa-comment"></i> Comment</button></div>
+        </div>
+
+        <div class="feed-post">
+            <div class="post-user">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Wisdom">
+                <div class="post-user-info"><strong>Wisdom (You)</strong><span>Yesterday</span></div>
+            </div>
+            <div class="post-text">Nothing beats Mom's Sunday Jollof. Best part of coming home! 🥘😋</div>
+            <div class="post-media"><img src="https://images.unsplash.com/photo-1567337710282-00832b415979?w=500"></div>
+            <div class="post-stats"><span>❤️ 31 Likes</span><span>5 Comments</span></div>
+            <div class="post-actions"><button class="action-btn"><i class="fa-regular fa-heart"></i>
+                    Love</button><button class="action-btn"><i class="fa-regular fa-comment"></i> Comment</button></div>
+        </div>
+
+        <div class="feed-post">
+            <div class="post-user">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Joy">
+                <div class="post-user-info"><strong>Cousin Joy</strong><span>2 days ago</span></div>
+            </div>
+            <div class="post-text">So happy to announce I'm starting my new job at the bank tomorrow. Thanks for the
+                prayers!</div>
+            <div class="post-stats"><span>❤️ 50 Likes</span><span>22 Comments</span></div>
+            <div class="post-actions"><button class="action-btn"><i class="fa-regular fa-heart"></i>
+                    Love</button><button class="action-btn"><i class="fa-regular fa-comment"></i> Comment</button></div>
+        </div>
+
+        <div class="feed-post">
+            <div class="post-user">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Michael">
+                <div class="post-user-info"><strong>Dad Michael</strong><span>3 days ago</span></div>
+            </div>
+            <div class="post-text">Wonderful service today. Remember: Family that prays together, stays together. ⛪❤️
+            </div>
+            <div class="post-media"><img src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=500"></div>
+            <div class="post-stats"><span>❤️ 20 Likes</span><span>2 Comments</span></div>
+            <div class="post-actions"><button class="action-btn"><i class="fa-regular fa-heart"></i>
+                    Love</button><button class="action-btn"><i class="fa-regular fa-comment"></i> Comment</button></div>
+        </div>
+
+        <div class="feed-post">
+            <div class="post-user">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Peter">
+                <div class="post-user-info"><strong>Uncle Peter</strong><span>4 days ago</span></div>
+            </div>
+            <div class="post-text">Greetings from the beach! Wish the whole family was here. 🌊🍹</div>
+            <div class="post-media"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500"></div>
+            <div class="post-stats"><span>❤️ 33 Likes</span><span>7 Comments</span></div>
+            <div class="post-actions"><button class="action-btn"><i class="fa-regular fa-heart"></i>
+                    Love</button><button class="action-btn"><i class="fa-regular fa-comment"></i> Comment</button></div>
+        </div>
+
+        <div class="feed-post">
+            <div class="post-user">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Grace">
+                <div class="post-user-info"><strong>Sister Grace</strong><span>1 week ago</span></div>
+            </div>
+            <div class="post-text">Meet the newest member of our tree! Little Baby Chioma arrived this morning. 😍👶
+            </div>
+            <div class="post-media"><img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?w=500"></div>
+            <div class="post-stats"><span>❤️ 88 Likes</span><span>40 Comments</span></div>
+            <div class="post-actions"><button class="action-btn"><i class="fa-regular fa-heart"></i>
+                    Love</button><button class="action-btn"><i class="fa-regular fa-comment"></i> Comment</button></div>
+        </div>
+
+        <div class="feed-post">
+            <div class="post-user">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah">
+                <div class="post-user-info"><strong>Mom Sarah</strong><span>1 week ago</span></div>
+            </div>
+            <div class="post-text">Our backyard garden is doing well! Look at these fresh peppers. 🌶️🌿</div>
+            <div class="post-media"><img src="https://images.unsplash.com/photo-1592841200221-a6898f307bac?w=500"></div>
+            <div class="post-stats"><span>❤️ 15 Likes</span><span>4 Comments</span></div>
+            <div class="post-actions"><button class="action-btn"><i class="fa-regular fa-heart"></i>
+                    Love</button><button class="action-btn"><i class="fa-regular fa-comment"></i> Comment</button></div>
+        </div>
+
+        <div class="feed-post">
+            <div class="post-user">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Wisdom">
+                <div class="post-user-info"><strong>Wisdom (You)</strong><span>Last week</span></div>
+            </div>
+            <div class="post-text">Building the future of our family history. Late night coding for the FAM-TREE app!
+                💻🔥</div>
+            <div class="post-stats"><span>❤️ 42 Likes</span><span>11 Comments</span></div>
+            <div class="post-actions"><button class="action-btn"><i class="fa-regular fa-heart"></i>
+                    Love</button><button class="action-btn"><i class="fa-regular fa-comment"></i> Comment</button></div>
+        </div>
+
+    </div>
+
+    <nav class="mobile-nav">
+        <a href="feed.html" class="nav-item active"><i class="fa-solid fa-house"></i><span>Feed</span></a>
+        <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-sitemap"></i><span>Tree</span></a>
+        <a href="chat.html" class="nav-item"><i class="fa-solid fa-comment-dots"></i><span>Chat</span></a>
+        <a href="notifications.html" class="nav-item"><i class="fa-solid fa-bell"></i><span>Alerts</span></a>
+        <a href="menu.html" class="nav-item"><i class="fa-solid fa-bars"></i><span>Menu</span></a>
+    </nav>
+
+    <div id="postModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button onclick="closeModal()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+                <h3>Create Post</h3>
+                <button class="post-submit-btn" onclick="submitPost()">Post</button>
+            </div>
+
+            <div class="modal-user-info">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Wisdom" class="user-avatar-small">
+                <div>
+                    <strong>Asikaburu Wisdom</strong>
+                    <div class="privacy-pill"><i class="fa-solid fa-users"></i> Family</div>
+                </div>
+            </div>
+
+            <textarea id="postTextarea" placeholder="What's on your mind, Wisdom?"></textarea>
+
+            <div class="modal-attachments">
+                <div class="attachment-option">
+                    <i class="fa-solid fa-image" style="color: #45bd62;"></i>
+                    <span>Photo/Video</span>
+                </div>
+                <div class="attachment-option">
+                    <i class="fa-solid fa-user-plus" style="color: #1877f2;"></i>
+                    <span>Tag Family</span>
+                </div>
+                <div class="attachment-option">
+                    <i class="fa-solid fa-location-dot" style="color: #f3425f;"></i>
+                    <span>Location</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    function openModal() {
+        document.getElementById('postModal').style.display = 'flex';
+        document.getElementById('postTextarea').focus();
+    }
+
+    function closeModal() {
+        document.getElementById('postModal').style.display = 'none';
+    }
+
+    function submitPost() {
+        const text = document.getElementById('postTextarea').value;
+        if (text.trim() !== "") {
+            alert("Post Shared to Family Feed!");
+            closeModal();
+            document.getElementById('postTextarea').value = "";
+        }
+    }
+
+    // Close modal if user clicks outside the content area
+    window.onclick = function (event) {
+        const modal = document.getElementById('postModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            // This would open your 'Create Post' modal automatically 
+            // and put the selected photo inside it.
+            openModal();
+            alert("Photo selected! Now add your caption.");
+        }
+    }
+
+    document.querySelectorAll('.story-item').forEach(item => {
+        item.addEventListener('click', function () {
+            if (this.classList.contains('add-story')) {
+                // Trigger the camera icon logic we built earlier
+                document.getElementById('cameraInput').click();
+            } else {
+                // Remove the unread ring once clicked
+                this.classList.remove('unread');
+                alert("Opening story from " + this.querySelector('span').innerText);
+            }
+        });
+    });
+</script>
+
+</html>

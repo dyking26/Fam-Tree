@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Family Gallery | FAM-TREE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Light Mode (Default) */
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #050505;
+            --text-sub: #65676b;
+            --border: #eeeeee;
+            --primary: #2d5a27;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e4e6eb;
+            --text-sub: #b0b3b8;
+            --border: #333333;
+        }
+
+        /* Apply variables to the body */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Update your card classes to use these variables */
+        .feed-post,
+        .info-card,
+        .login-card,
+        .mobile-nav,
+        .search-container {
+            background-color: var(--card-bg) !important;
+            border-color: var(--border) !important;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            padding-bottom: 80px;
+        }
+
+        /* --- Header --- */
+        .gallery-header {
+            padding: 20px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+        }
+
+        .gallery-header h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* --- Category Tabs --- */
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 0 15px 15px;
+            scrollbar-width: none;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            padding: 8px 20px;
+            background: #f0f2f5;
+            border-radius: 20px;
+            white-space: nowrap;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #65676b;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* --- Masonry-style Grid --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /* 2 columns for mobile */
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #eee;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:active img {
+            transform: scale(1.05);
+        }
+
+        /* Special sizing for some images to make it look "Masonry" */
+        .tall {
+            grid-row: span 2;
+        }
+
+        /* --- Floating Action Button (Upload) --- */
+        .upload-fab {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-size: 1.5rem;
+            z-index: 1000;
+        }
+
+        /* --- Nav (Reuse your existing) --- */
+        .mobile-nav {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #eee;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 2000;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #888;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="gallery-header">
+        <h1>Memories</h1>
+        <i class="fa-solid fa-magnifying-glass" style="color: #666;"></i>
+    </header>
+
+    <div class="category-tabs">
+        <div class="tab active">All</div>
+        <div class="tab">Weddings</div>
+        <div class="tab">Birthdays</div>
+        <div class="tab">Throwbacks</div>
+        <div class="tab">Travel</div>
+        <div class="tab">Graduations</div>
+    </div>
+
+    <main class="gallery-grid">
+        <div class="gallery-item tall"><img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400">
+        </div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1520850838140-6240d890b0d3?w=400"></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400"></div>
+        <div class="gallery-item tall"><img src="https://images.unsplash.com/photo-1471286174890-9c112ffca5b4?w=400">
+        </div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=400"></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1567337710282-00832b415979?w=400"></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=400"></div>
+        <div class="gallery-item tall"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400">
+        </div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?w=400"></div>
+        <div class="gallery-item"><img src="https://images.unsplash.com/photo-1592841200221-a6898f307bac?w=400"></div>
+    </main>
+
+    <div class="upload-fab" onclick="document.getElementById('galleryUpload').click()">
+        <i class="fa-solid fa-plus"></i>
+    </div>
+    <input type="file" id="galleryUpload" style="display: none;" accept="image/*">
+
+    <nav class="mobile-nav">
+        <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-sitemap"></i><span>Tree</span></a>
+        <a href="feed.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Feed</span></a>
+        <a href="chat.html" class="nav-item"><i class="fa-solid fa-comment-dots"></i><span>Chat</span></a>
+        <a href="gallery.html" class="nav-item active"><i class="fa-solid fa-images"></i><span>Photos</span></a>
+        <a href="menu.html" class="nav-item"><i class="fa-solid fa-bars"></i><span>Menu</span></a>
+    </nav>
+
+    <script>
+        // Simple tab switching logic
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                document.querySelector('.tab.active').classList.remove('active');
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

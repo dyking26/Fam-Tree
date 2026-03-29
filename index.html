@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAM-TREE | Document Your Heritage</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+</head>
+
+<style>
+    :root {
+        --primary: #2d5a27;
+        /* Forest Green */
+        --secondary: #f4f1ea;
+        /* Cream/Parchment */
+        --text: #333;
+        --accent: #8b5a2b;
+        /* Wood Brown */
+    }
+
+    #splash-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #1e3d1a 0%, #2d5a27 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.5s;
+    }
+
+    .logo-container {
+        text-align: center;
+        color: white;
+    }
+
+    /* --- The Growing Logo Animation --- */
+    .tree-icon-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    .splash-logo {
+        font-size: 4rem;
+        position: relative;
+        z-index: 2;
+        animation: logoGrow 1.2s ease-out forwards;
+    }
+
+    .pulse-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    /* --- Text & Loading Bar --- */
+    .logo-container h1 {
+        font-size: 2rem;
+        letter-spacing: 4px;
+        font-weight: 800;
+        margin-bottom: 5px;
+        animation: fadeInUp 1s ease-out 0.5s forwards;
+        opacity: 0;
+    }
+
+    .logo-container p {
+        font-size: 0.8rem;
+        opacity: 0;
+        letter-spacing: 1px;
+        animation: fadeInUp 1s ease-out 0.8s forwards;
+    }
+
+    .loading-bar-container {
+        width: 150px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.1);
+        margin: 30px auto 0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .loading-bar-progress {
+        width: 0%;
+        height: 100%;
+        background: white;
+        animation: fillBar 1.5s ease-in-out forwards;
+    }
+
+    /* --- Keyframe Definitions --- */
+    @keyframes logoGrow {
+        0% {
+            transform: scale(0) rotate(-15deg);
+            opacity: 0;
+        }
+
+        70% {
+            transform: scale(1.1) rotate(0deg);
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    @keyframes pulse {
+        0% {
+            width: 60px;
+            height: 60px;
+            opacity: 0.5;
+        }
+
+        100% {
+            width: 120px;
+            height: 120px;
+            opacity: 0;
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fillBar {
+        0% {
+            width: 0%;
+        }
+
+        100% {
+            width: 100%;
+        }
+    }
+
+    /* Class to hide the splash screen */
+    .splash-hidden {
+        transform: translateY(-100%) !important;
+        /* App slides in from bottom */
+        opacity: 0;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--secondary);
+        color: var(--text);
+        line-height: 1.6;
+    }
+
+    h1,
+    h2,
+    .logo {
+        font-family: 'Playfair Display', serif;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 10%;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .logo span {
+        color: var(--accent);
+        color: green;
+    }
+
+    nav a {
+        margin-left: 20px;
+        text-decoration: none;
+        color: var(--text);
+        font-weight: 600;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white !important;
+        padding: 0.8rem 1.5rem;
+        border-radius: 5px;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+
+    .btn-text {
+        background: white;
+        color: green !important;
+        padding: 0.8rem 1.5rem;
+        border-radius: 5px;
+        transition: 0.3s;
+        text-decoration: none;
+
+    }
+
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+
+
+    .hero {
+        background: linear-gradient(rgba(32, 32, 32, 0.2), rgba(32, 32, 32, 0.6)),
+            url(..//img/fam\ tree\ index.jpg) no-repeat center/cover;
+        display: flex;
+        align-items: center;
+        padding: 5rem 10%;
+        gap: 50px;
+    }
+
+    .hero-content {
+        flex: 1;
+    }
+
+    .hero-content h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        color: rgb(222, 224, 221);
+    }
+
+    .hero-content p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        max-width: 500px;
+        color: rgb(212, 210, 210);
+    }
+
+    .hero-visual {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Simple CSS Tree Visual */
+    .tree-preview {
+        text-align: center;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .node {
+        border: 2px solid var(--accent);
+        padding: 10px 20px;
+        border-radius: 20px;
+        display: inline-block;
+        background: white;
+        font-weight: bold;
+    }
+
+    .row {
+        margin-top: 40px;
+        display: flex;
+        gap: 20px;
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        padding: 5rem 10%;
+        background: #fff;
+    }
+
+    .feature-card {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .feature-card h3 {
+        color: var(--accent);
+        margin-bottom: 10px;
+    }
+
+    footer {
+        text-align: center;
+        padding: 2rem;
+        font-size: 0.9rem;
+        background: var(--primary);
+        color: white;
+    }
+</style>
+
+<body>
+
+    <div id="splash-screen">
+        <div class="logo-container">
+            <!-- The Animated Logo -->
+            <div class="tree-icon-wrapper">
+                <i class="fa-solid fa-sitemap splash-logo"></i>
+                <div class="pulse-ring"></div>
+            </div>
+            <h1>FAM-TREE</h1>
+            <p>Connecting Generations</p>
+
+            <!-- Modern Loading Bar -->
+            <div class="loading-bar-container">
+                <div class="loading-bar-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <header class="navbar">
+        <div class="logo">FAM-<span>TREE</span></div>
+        <nav>
+            <a href="#about">How it Works</a>
+            <a href="login.html" class="btn-secondary">Login</a>
+            <a href="signup.html" class="btn-primary">Start a Tree</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Every family has a story. <br>Start writing yours today.</h1>
+                <p>A collaborative way to map your lineage. Create an account, invite your relatives, and watch your
+                    family tree grow automatically as everyone adds their piece of history.</p>
+                <div class="hero-btns">
+                    <a href="signup.html" class="btn-primary">Create Your Family Account</a>
+                    <a href="#how" class="btn-text">Watch how it works →</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="tree-preview">
+                    <div class="node root">Grandpa John</div>
+                    <div class="branch"></div>
+                    <div class="row">
+                        <div class="node">Dad</div>
+                        <div class="node">Aunt Mary</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how" class="features">
+            <div class="feature-card">
+                <h3>1. Create</h3>
+                <p>One person starts the tree and sets the family foundation.</p>
+            </div>
+            <div class="feature-card">
+                <h3>2. Invite</h3>
+                <p>Send secure links to siblings, cousins, and elders.</p>
+            </div>
+            <div class="feature-card">
+                <h3>3. Grow</h3>
+                <p>Members join and describe their position to fit perfectly into the hierarchy.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 FAM-TREE. Preserving history, one generation at a time.</p><br>
+        <p>Created by Dy'King</p>
+    </footer>
+
+</body>
+
+<script>
+    // Hide splash screen after 1.5 seconds
+    setTimeout(() => {
+        document.getElementById('splash-screen').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('splash-screen').style.display = 'none';
+        }, 500);
+    }, 1500);
+
+    window.addEventListener('load', function () {
+        // Wait 2 seconds so the animation completes
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            splash.classList.add('splash-hidden');
+
+            // Remove from DOM after transition finishes
+            setTimeout(() => {
+                splash.style.display = 'none';
+            }, 800);
+        }, 2500);
+    });
+</script>
+
+</html>

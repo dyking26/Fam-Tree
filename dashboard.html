@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FAM-TREE | Unified Family Hub</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Light Mode (Default) */
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #050505;
+            --text-sub: #65676b;
+            --border: #eeeeee;
+            --primary: #2d5a27;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e4e6eb;
+            --text-sub: #b0b3b8;
+            --border: #333333;
+        }
+
+        /* Apply variables to the body */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Update your card classes to use these variables */
+        .feed-post,
+        .info-card,
+        .login-card,
+        .mobile-nav,
+        .search-container {
+            background-color: var(--card-bg) !important;
+            border-color: var(--border) !important;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: var(--bg-lively);
+        }
+
+        /* --- HEADER (Design 1 Style) --- */
+        .top-bar {
+            height: 70px;
+            background: white;
+            border-bottom: 2px solid var(--sidebar-border);
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent-lively);
+            color: green;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notif-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--notification-red);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            border: 2px solid white;
+            font-weight: bold;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            height: calc(100vh - 70px);
+        }
+
+        /* --- LEFT SIDEBAR (Merged) --- */
+        .left-sidebar {
+            background: white;
+            border-right: 1px solid var(--sidebar-border);
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .profile-card {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-pic-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--node-me);
+            margin: 0 auto 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-pic-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-overlay {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            font-size: 10px;
+            padding: 6px 0;
+            cursor: pointer;
+        }
+
+        .form-section h5 {
+            color: var(--accent-lively);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        /* --- CENTER: TREE CANVAS (Design 2 Logic) --- */
+        .tree-viewer {
+            padding: 3rem;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .tree ul {
+            padding-top: 20px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .tree li {
+            list-style-type: none;
+            position: relative;
+            padding: 20px 10px 0 10px;
+            text-align: center;
+        }
+
+        /* Spouse Pairing Logic from Design 2 */
+        .spouse-pair {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .spouse-pair::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            right: 30px;
+            border-top: 2px solid var(--accent-lively);
+            z-index: 0;
+        }
+
+        .node-card {
+            position: relative;
+            z-index: 1;
+            padding: 12px 18px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            font-size: 13px;
+            min-width: 110px;
+            transition: 0.3s;
+        }
+
+        .node-card.male {
+            background: var(--node-male);
+            color: #1a4a4d;
+        }
+
+        .node-card.female {
+            background: var(--node-female);
+            color: #5c3a1e;
+        }
+
+        .node-card.current {
+            background: var(--node-me);
+            color: white;
+        }
+
+        /* Design 2 Connectors */
+        .tree li::before,
+        .tree li::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 50%;
+            border-top: 2px solid #a3b1a3;
+            width: 50%;
+            height: 20px;
+        }
+
+        .tree li::after {
+            right: auto;
+            left: 50%;
+            border-left: 2px solid #a3b1a3;
+        }
+
+        .tree li:only-child::after,
+        .tree li:only-child::before {
+            display: none;
+        }
+
+        .tree li:first-child::before,
+        .tree li:last-child::after {
+            border: 0 none;
+        }
+
+        .tree li:last-child::before {
+            border-right: 2px solid #a3b1a3;
+            border-radius: 0 5px 0 0;
+        }
+
+        .tree li:first-child::after {
+            border-radius: 5px 0 0 0;
+        }
+
+        .tree ul ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            border-left: 2px solid #a3b1a3;
+            width: 0;
+            height: 20px;
+        }
+
+        /* --- RIGHT SIDEBAR: CHAT (Design 1 Aesthetic) --- */
+        .right-sidebar {
+            background: white;
+            border-left: 1px solid var(--sidebar-border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-tab {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .chat-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .msg {
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            max-width: 85%;
+            line-height: 1.4;
+        }
+
+        .msg.received {
+            background: #eee;
+            align-self: flex-start;
+        }
+
+        .msg.sent {
+            background: var(--node-me);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            border-radius: 20px;
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            outline: none;
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* --- NOTIFICATION DROPDOWN --- */
+        .notif-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 5%;
+            width: 300px;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            display: none;
+            z-index: 200;
+        }
+
+        .notif-dropdown.active {
+            display: block;
+        }
+
+        .notif-item {
+            padding: 12px;
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #f9f9f9;
+            cursor: pointer;
+            align-items: center;
+        }
+
+        .notif-text {
+            font-size: 0.8rem;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            cursor: pointer;
+            font-size: 24px;
+            color: #999;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .save-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .tree-viewer {
+            position: relative;
+            /* This allows the button to anchor to this section */
+        }
+
+        .add-btn-fab {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99;
+        }
+
+        .add-btn-fab:hover {
+            transform: scale(1.1);
+            background-color: var(--node-me);
+        }
+
+        /* This ensures that when you add 2+ children, the horizontal lines connect them */
+        .tree li::before,
+        .tree li::after {
+            border-top: 2px solid #a3b1a3;
+        }
+
+        /* Container for the icons */
+        .node-actions {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            display: flex;
+            gap: 10px;
+            opacity: 0;
+            /* Hidden by default */
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        /* Show icons when hovering over the card */
+        .node-card:hover .node-actions {
+            opacity: 1;
+        }
+
+        /* Icon individual styling */
+        .node-actions i {
+            font-size: 0.75rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .node-actions i:hover {
+            color: var(--notification-red);
+            /* Delete icon turns red */
+        }
+
+        .node-actions .fa-pen-to-square:hover {
+            color: var(--primary);
+            /* Edit icon turns green */
+        }
+
+        /* --- DESKTOP RULES (Hide mobile stuff) --- */
+        .mobile-nav {
+            display: none;
+        }
+
+        /* --- MOBILE RULES (Screen size 768px or less) --- */
+        @media (max-width: 768px) {
+
+            /* 1. Show the Bottom Bar */
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: #ffffff;
+                border-top: 1px solid #eee;
+                justify-content: space-around;
+                padding: 12px 0;
+                z-index: 9999;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-item {
+                text-decoration: none;
+                color: #888;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex: 1;
+                position: relative;
+            }
+
+            /* Active page color */
+            .nav-item.active {
+                color: #2d5a27;
+            }
+
+            .nav-item i {
+                font-size: 1.2rem;
+                margin-bottom: 3px;
+            }
+
+            .nav-item span {
+                font-size: 0.6rem;
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+
+            /* Red Notification Badge */
+            .notif-badge-small {
+                position: absolute;
+                top: -4px;
+                right: 20%;
+                background: #e63946;
+                color: white;
+                font-size: 9px;
+                padding: 2px 5px;
+                border-radius: 50%;
+                border: 2px solid white;
+            }
+
+            /* 2. Fix the Layout */
+            body {
+                padding-bottom: 80px !important;
+            }
+
+            /* Space so nav doesn't cover content */
+
+            .dashboard-container {
+                display: block;
+                /* Stack everything vertically instead of side-by-side */
+            }
+
+            /* Hide the big desktop sidebars on mobile to save space */
+            .left-sidebar,
+            .right-sidebar {
+                display: none;
+            }
+
+            /* Make the Tree take up the full screen */
+            .tree-viewer {
+                width: 100%;
+                height: 80vh;
+                padding: 10px;
+            }
+
+            .top-bar .nav-center {
+                display: none;
+            }
+
+            /* Hide middle links on top */
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="top-bar">
+        <a href="#" class="logo">FAM-<span>TREE</span></a>
+
+        <nav class="nav-center">
+            <a href="#" class="nav-link active"><i class="fa-solid fa-network-wired"></i> Family Tree</a>
+            <a href="feed.html" class="nav-link"><i class="fa-solid fa-images"></i> Family Feed</a>
+        </nav>
+
+        <div class="nav-right">
+            <div class="notif-wrapper" onclick="toggleNotifs()">
+                <i class="fa-regular fa-bell" style="font-size: 1.4rem; color: #555;"></i>
+                <span class="notif-badge">3</span>
+            </div>
+            <div
+                style="width: 35px; height: 35px; border-radius: 50%; overflow: hidden; border: 2px solid var(--primary);">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Wisdom">
+            </div>
+        </div>
+
+        <div class="notif-dropdown" id="notifDropdown">
+            <div style="padding: 12px; border-bottom: 1px solid #eee; font-weight: bold;">Notifications</div>
+            <div class="notif-item">
+                <i class="fa-solid fa-circle-user" style="color: var(--accent-lively);"></i>
+                <div class="notif-text"><strong>Dad Michael</strong> added a new photo.</div>
+            </div>
+            <div class="notif-item">
+                <i class="fa-solid fa-message" style="color: var(--primary);"></i>
+                <div class="notif-text">New message in <strong>Family Chat</strong>.</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="left-sidebar">
+            <div class="profile-card">
+                <div class="profile-pic-container">
+                    <img id="profile-img" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Wisdom">
+                    <label for="file-upload" class="upload-overlay">Change Photo</label>
+                    <input id="file-upload" type="file" style="display:none;" onchange="previewImage(event)" />
+                </div>
+                <h4>Wisdom Asikaburu</h4>
+                <p style="font-size: 0.75rem; color: #666;">Nigeria</p>
+            </div>
+
+            <div class="form-section">
+                <h5>My Photo Gallery</h5>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                    <div style="aspect-ratio: 1; background: #e8eee8; border-radius: 6px; border: 1px solid #d0d8d0;">
+                    </div>
+                    <div style="aspect-ratio: 1; background: #e8eee8; border-radius: 6px; border: 1px solid #d0d8d0;">
+                    </div>
+                    <button
+                        style="aspect-ratio: 1; border: 2px dashed #ccc; border-radius: 6px; background: none; cursor: pointer;">+</button>
+                </div>
+            </div>
+        </aside>
+
+        <section class="tree-viewer">
+            <div class="tree">
+                <ul>
+                    <li>
+                        <div class="spouse-pair">
+                            <div class="node-card male"><strong>Grandpa John</strong></div>
+                            <div class="node-card female"><strong>Grandma Rose</strong></div>
+                        </div>
+                        <ul>
+                            <li>
+                                <div class="spouse-pair">
+                                    <div class="node-card male"><strong>Dad Michael</strong></div>
+                                    <div class="node-card female"><strong>Mom Sarah</strong></div>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <div class="node-card current"><strong>Wisdom (Me)</strong></div>
+                                    </li>
+                                    <li>
+                                        <div class="node-card female"><strong>Sister Grace</strong></div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="node-card male"><strong>Uncle Peter</strong></div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <button class="add-btn-fab" onclick="openModal()">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </section>
+
+        <aside class="right-sidebar">
+            <div class="chat-header">
+                <button class="chat-tab active">Public</button>
+                <button class="chat-tab" style="background: #f5f5f5; color: #666;">Private</button>
+            </div>
+            <div class="chat-messages" id="chatBox">
+                <div class="msg received"><strong>Dad Michael:</strong> Added Grandma Rose to the tree!</div>
+                <div class="msg sent">Looks perfect, Dad.</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Say something...">
+                <button class="send-btn">➤</button>
+            </div>
+        </aside>
+    </div>
+
+    <div id="memberModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Family Member</h3>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="addMemberForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="relName" placeholder="e.g. John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="relGender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Relation to Tree</label>
+                    <select id="relType">
+                        <option value="child">Child of Current Member</option>
+                        <option value="spouse">Spouse of Current Member</option>
+                    </select>
+                </div>
+                <button type="submit" class="save-btn">Add to Tree</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <a href="feed.html" class="nav-item">
+            <i class="fa-solid fa-house"></i>
+            <span>Feed</span>
+        </a>
+        <a href="dashboard.html" class="nav-item">
+            <i class="fa-solid fa-sitemap"></i>
+            <span>Tree</span>
+        </a>
+
+        <a href="chat.html" class="nav-item">
+            <i class="fa-solid fa-comment-dots"></i>
+            <span>Chat</span>
+        </a>
+        <a href="notification.html" class="nav-item">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge-small">3</span>
+            <span>Alerts</span>
+        </a>
+        <a href="menu.html" class="nav-item">
+            <i class="fa-solid fa-bars"></i>
+            <span>Menu</span>
+        </a>
+    </nav>
+
+    <script>
+        function toggleNotifs() {
+            const dropdown = document.getElementById('notifDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                document.getElementById('profile-img').src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        window.onclick = function (event) {
+            if (!event.target.closest('.notif-wrapper') && !event.target.closest('.notif-dropdown')) {
+                document.getElementById('notifDropdown').classList.remove('active');
+            }
+        }
+
+        // --- LOCAL STORAGE HELPERS ---
+        // This mimics a database by saving data to your browser's memory
+        const getSavedMessages = () => JSON.parse(localStorage.getItem('familyChat')) || [];
+        const saveMessage = (msg) => {
+            const chat = getSavedMessages();
+            chat.push(msg);
+            localStorage.setItem('familyChat', JSON.stringify(chat));
+        };
+
+        // --- INITIALIZE CHAT ---
+        const chatBox = document.getElementById('chatBox') || document.getElementById('chat-box');
+        const renderChat = () => {
+            const messages = getSavedMessages();
+            chatBox.innerHTML = ''; // Clear current view
+            messages.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = `msg ${msg.sender === 'Wisdom' ? 'sent' : 'received'}`;
+                div.innerHTML = `<strong>${msg.sender}:</strong> ${msg.text}`;
+                chatBox.appendChild(div);
+            });
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+
+        // --- SEND MESSAGE FUNCTION ---
+        function sendMessage(e) {
+            if (e) e.preventDefault();
+            const input = document.querySelector('.chat-input input');
+            const text = input.value.trim();
+
+            if (text !== "") {
+                const newMsg = { sender: 'Wisdom', text: text, time: new Date() };
+                saveMessage(newMsg);
+                renderChat();
+                input.value = "";
+            }
+            return false;
+        }
+
+        // --- ATTACH EVENT LISTENERS ---
+        document.querySelector('.send-btn').addEventListener('click', sendMessage);
+        document.querySelector('.chat-input input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage(e);
+        });
+
+        // Load chat on page start
+        renderChat();
+
+        // Open/Close Functions
+        function openModal() {
+            document.getElementById('memberModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('memberModal').style.display = 'none';
+        }
+
+        document.getElementById('addMemberForm').onsubmit = function (e) {
+            e.preventDefault();
+
+            // 1. Get values from the form
+            const name = document.getElementById('relName').value;
+            const gender = document.getElementById('relGender').value;
+            const type = document.getElementById('relType').value;
+
+            // 2. Find the "Current User" (Wisdom) to attach the relative to
+            // In a real app, you'd click a specific person, but for now, we'll attach to 'Me'
+            const currentUserNode = document.querySelector('.node-card.current').parentElement;
+
+            if (type === 'child') {
+                // Look for an existing <ul> inside the parent <li>
+                let subTree = currentUserNode.querySelector('ul');
+
+                // If no <ul> exists (first child), create one
+                if (!subTree) {
+                    subTree = document.createElement('ul');
+                    currentUserNode.appendChild(subTree);
+                }
+
+                // 3. Create the new <li> and the Node Card
+                const newLi = document.createElement('li');
+                newLi.innerHTML = `
+            <div class="node-card ${gender === 'male' ? 'male' : 'female'}">
+                <div class="node-actions">
+                    <i class="fa-solid fa-pen-to-square" onclick="editMember(this)"></i>
+                    <i class="fa-solid fa-trash" onclick="deleteMember(this)"></i>
+                </div>
+                <strong>${name}</strong>
+            </div>
+        `;
+
+                // 4. Add it to the tree!
+                subTree.appendChild(newLi);
+            }
+            else if (type === 'spouse') {
+                // Spouse logic: Find the node and wrap it in a 'spouse-pair' div
+                const card = currentUserNode.querySelector('.node-card');
+
+                // If not already in a pair, wrap it
+                if (!card.parentElement.classList.contains('spouse-pair')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'spouse-pair';
+                    card.parentNode.insertBefore(wrapper, card);
+                    wrapper.appendChild(card);
+                }
+
+                // Add the spouse card to the pair
+                const spouseCard = document.createElement('div');
+                spouseCard.className = `node-card ${gender === 'male' ? 'male' : 'female'}`;
+                spouseCard.innerHTML = `<strong>${name}</strong>`;
+                card.parentElement.appendChild(spouseCard);
+            }
+
+            // Close and Reset
+            closeModal();
+            this.reset();
+        };
+
+
+    </script>
+</body>
+
+</html>
