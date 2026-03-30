@@ -64,10 +64,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
+            position: relative;
             top: 0;
             z-index: 1000;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    
         }
 
         .feed-header h1 {
@@ -471,7 +472,7 @@
 <body>
 
     <header class="feed-header">
-        <h1>Family Feed</h1>
+        <h1>Fam-Feed</h1>
         <div class="header-icons">
             <i class="fa-solid fa-camera" onclick="document.getElementById('cameraInput').click()"></i>
             <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i></a>
