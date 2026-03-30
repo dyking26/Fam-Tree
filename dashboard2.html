@@ -650,7 +650,7 @@
             /* Hide middle links on top */
         }
 
-        .top-bar img {
+        .top-bar img{
             width: 40px;
             height: 40px;
             position: relative;
@@ -658,200 +658,6 @@
 
         }
 
-        .tree-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 10px;
-        }
-
-        .wings-wrapper {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 900px;
-            margin-top: 30px;
-        }
-
-        .wing {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-            /* Space between children vertically */
-            width: 40%;
-        }
-
-        .child-unit {
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .child-unit:hover {
-            transform: scale(1.05);
-        }
-
-        /* Modal Styling */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-        }
-
-        .modal-content {
-            background: #fdfbf7;
-            margin: 5% auto;
-            padding: 30px;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        .empty-slot {
-            border: 2px dashed #ccc;
-            color: #999;
-            padding: 10px;
-            border-radius: 8px;
-            margin: 5px;
-            display: inline-block;
-        }
-
-
-        /* Connecting the Hub to the Wings */
-        .wings-wrapper {
-            position: relative;
-        }
-
-        /* The main horizontal bar coming from the top */
-        .wings-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            width: 2px;
-            height: 30px;
-            background: #8b5a2b;
-            /* Wood brown color */
-        }
-
-        /* The horizontal cross-bar splitting left and right */
-        .wings-wrapper::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 10%;
-            width: 80%;
-            height: 2px;
-            background: #8b5a2b;
-        }
-
-        /* Vertical lines for each child */
-        .wing {
-            position: relative;
-            padding-top: 20px;
-        }
-
-        /* This draws the vertical line behind the 3 children on each side */
-        .wing::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #8b5a2b;
-        }
-
-        .left-wing::before {
-            left: 100%;
-            margin-left: 20px;
-        }
-
-        .right-wing::before {
-            right: 100%;
-            margin-right: 20px;
-        }
-
-        /* The little horizontal "stubs" connecting the card to the vertical line */
-        .child-unit {
-            position: relative;
-        }
-
-        .left-wing .child-unit::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            right: -22px;
-            width: 20px;
-            height: 2px;
-            background: #8b5a2b;
-        }
-
-        .right-wing .child-unit::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: -22px;
-            width: 20px;
-            height: 2px;
-            background: #8b5a2b;
-        }
-
-        .modal-content {
-            animation: slideIn 0.3s ease-out;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .parents-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .children-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            padding: 20px;
-        }
-
-        .clickable {
-            border: 2px solid #2d5a27;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .clickable:hover {
-            background: #e8f5e9;
-            transform: scale(1.05);
-        }
-
-        .node-card.female {
-            border-color: #e91e63;
-        }
-
-        .node-card.male {
-            border-color: #2196f3;
-        }
     </style>
 </head>
 
@@ -914,48 +720,41 @@
             </div>
         </aside>
 
-        <section class="tree-container">
-            <div class="grandparents-hub">
-                <div class="spouse-pair">
-                    <div class="node-card male">Alisidike Asikaburu</div>
-                    <div class="node-card female">Josephine Asikaburu</div>
-                </div>
+        <section class="tree-viewer">
+            <div class="tree">
+                <ul>
+                    <li>
+                        <div class="spouse-pair">
+                            <div class="node-card male"><strong>Alisidike Asikaburu</strong></div>
+                            <div class="node-card female"><strong>Josephine Asikaburu</strong></div>
+                        </div>
+                        <ul>
+                            <li>
+                                <div class="spouse-pair">
+                                    <div class="node-card male"><strong>Dad Michael</strong></div>
+                                    <div class="node-card female"><strong>Mom Sarah</strong></div>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <div class="node-card current"><strong>Wisdom (Me)</strong></div>
+                                    </li>
+                                    <li>
+                                        <div class="node-card female"><strong>Sister Grace</strong></div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="node-card male"><strong>Uncle Peter</strong></div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
 
-            <div class="wings-wrapper">
-                <div class="wing left-wing">
-                    <div class="child-unit" onclick="openFamily('angel')">
-                        <div class="node-card female">Angel Orji</div>
-                    </div>
-                    <div class="child-unit" onclick="openFamily('divine')">
-                        <div class="node-card male">Divine Asikaburu</div>
-                    </div>
-                    <div class="child-unit" onclick="openFamily('wisdom')">
-                        <div class="node-card male">Wisdom Asikaburu</div>
-                    </div>
-                </div>
-
-                <div class="wing right-wing">
-                    <div class="child-unit" onclick="openFamily('favour')">
-                        <div class="node-card female">Favour Faithful</div>
-                    </div>
-                    <div class="child-unit" onclick="openFamily('winner')">
-                        <div class="node-card female">Winner Asikaburu</div>
-                    </div>
-                    <div class="child-unit" onclick="openFamily('success')">
-                        <div class="node-card female">Success Asikaburu</div>
-                    </div>
-                </div>
-            </div>
+            <button class="add-btn-fab" onclick="openModal()">
+                <i class="fa-solid fa-plus"></i>
+            </button>
         </section>
-
-        <div id="familyModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <div id="modal-body">
-                </div>
-            </div>
-        </div>
 
         <aside class="right-sidebar">
             <div class="chat-header">
@@ -1000,18 +799,6 @@
                 </div>
                 <button type="submit" class="save-btn">Add to Tree</button>
             </form>
-        </div>
-    </div>
-
-    <div id="familyModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-nav">
-                <button onclick="closeModal()" class="btn-close">Close ×</button>
-                <button id="backBtn" onclick="goBack()" style="display:none;">← Back</button>
-            </div>
-
-            <div id="modal-body">
-            </div>
         </div>
     </div>
 
@@ -1177,184 +964,6 @@
             closeModal();
             this.reset();
         };
-
-
-        function openFamily(id) {
-            const data = familyData[id];
-            const modal = document.getElementById('familyModal');
-            const body = document.getElementById('modal-body');
-
-            // Create the tree view inside the modal
-            let content = `<h2>${data.name}'s Family</h2>`;
-            content += `<div class="spouse-pair">
-                <div class="node-card male">${data.name}</div>
-                ${data.spouse ? `<div class="node-card female">${data.spouse}</div>` : `<div class="empty-slot">Potential Spouse</div>`}
-            </div>`;
-
-            content += `<div class="children-list"><h3>Children</h3>`;
-            if (data.children.length > 0) {
-                data.children.forEach(kid => {
-                    content += `<div class="node-card">${kid}</div>`;
-                });
-            } else {
-                content += `<p class="empty-slot">No children registered yet</p>`;
-            }
-            content += `</div>`;
-
-            body.innerHTML = content;
-            modal.style.display = "block";
-        }
-
-        function closeModal() {
-            document.getElementById('familyModal').style.display = "none";
-        }
-
-        const familyData = {
-            // 1. THE ROOT
-            "alisidike": {
-                name: "Alisidike Asikaburu",
-                spouse: "Josephine",
-                gender: "male",
-                children: ["angel", "divine", "wisdom", "favour", "winner", "success"]
-            },
-
-            // 2. THE SIX CHILDREN (The Lineages)
-            "angel": {
-                name: "Angel Orji",
-                spouse: "Samuel Orji",
-                gender: "female",
-                children: ["mitch", "amilia"] // Samuel's kids
-            },
-            "divine": {
-                name: "Divine Asikaburu (First)",
-                spouse: null,
-                gender: "male",
-                children: [] // Add kids here later
-            },
-            "wisdom": {
-                name: "Divine Asikaburu (Second)",
-                spouse: null,
-                gender: "male",
-                children: []
-            },
-            "favour": {
-                name: "Favour Faithful (Third)",
-                spouse: "Faithful Onyekachi",
-                gender: "female",
-                children: ["jimeto, amanda"]
-            },
-            "winner": {
-                name: "Divine Asikaburu (Fourth)",
-                spouse: null,
-                gender: "male",
-                children: []
-            },
-            "success": {
-                name: "Divine Asikaburu (Fifth)",
-                spouse: null,
-                gender: "male",
-                children: []
-            },
-
-            // 3. THE GRANDCHILDREN (Third Generation)
-            "mitch": {
-                name: "Mitch Orji",
-                spouse: null,
-                gender: "male",
-                children: ["mitch_jr"] // Click this to go to 4th generation
-            },
-            "amilia": {
-                name: "Amilia Orji",
-                spouse: null,
-                gender: "female",
-                children: []
-            },
-            "jimeto": {
-                name: "Jimeto Faithful",
-                spouse: null,
-                gender: "male",
-                children: []
-            },
-            "amanda": {
-                name: "Amanda Faithful",
-                spouse: null,
-                gender: "female",
-                children: []
-            },
-
-            // 4. THE GREAT-GRANDCHILDREN
-            "mitch_jr": {
-                name: "Mitch Junior",
-                spouse: null,
-                gender: "male",
-                children: []
-            }
-        };
-
-        let historyStack = []; // Stores the IDs of people we've visited
-
-        function openFamily(id) {
-            const person = familyData[id];
-            if (!person) return;
-
-            const body = document.getElementById('modal-body');
-            const backBtn = document.getElementById('backBtn');
-
-            // Show/Hide Back Button
-            backBtn.style.display = historyStack.length > 0 ? "inline-block" : "none";
-
-            // Build the "Family Unit" View
-            let html = `
-        <div class="family-unit">
-            <div class="parents-row">
-                <div class="node-card ${person.gender}">${person.name}</div>
-                <div class="connector">+</div>
-                <div class="node-card ${person.gender === 'male' ? 'female' : 'male'}">
-                    ${person.spouse || 'Potential Spouse'}
-                </div>
-            </div>
-
-            <div class="children-row">
-                <h4>Descendants</h4>
-                <div class="children-grid">
-                    ${person.children.map(childId => {
-                const child = familyData[childId];
-                return `
-                            <div class="node-card clickable" onclick="drillDown('${childId}')">
-                                <strong>${child ? child.name : childId}</strong>
-                                ${child && child.children.length > 0 ? '<br><small>View Lineage ↓</small>' : ''}
-                            </div>
-                        `;
-            }).join('')}
-                    ${person.children.length === 0 ? '<p class="empty">No descendants registered.</p>' : ''}
-                </div>
-            </div>
-        </div>
-    `;
-
-            body.innerHTML = html;
-            document.getElementById('familyModal').style.display = "block";
-        }
-
-        function drillDown(newId) {
-            // Save current person to history so we can go back
-            const currentId = historyStack[historyStack.length - 1];
-            // Find who is currently being displayed and push to stack
-            // (Simplified for this example)
-            historyStack.push(newId);
-            openFamily(newId);
-        }
-
-        function goBack() {
-            historyStack.pop(); // Remove current
-            const previousId = historyStack.length > 0 ? historyStack[historyStack.length - 1] : "alisidike";
-            // If stack is empty, we go back to the main start
-            if (historyStack.length === 0) {
-                closeModal();
-            } else {
-                openFamily(previousId);
-            }
-        }
 
 
     </script>
